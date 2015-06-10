@@ -1,0 +1,12 @@
+{
+  "name": "plane-watcher",
+  "version": "0.0.0",
+  "description": "look for planes below 4000ft and send a notification",
+  "dependencies": {
+    "collections": "^1.2.3",
+    "gps-util": "^0.1.0",
+    "node-notifier": "^4.2.1",
+    "open": "0.0.5",
+    "request": "^2.57.0"
+  }
+}
