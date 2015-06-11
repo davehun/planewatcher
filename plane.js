@@ -78,13 +78,15 @@ function watch() {
       var plane;
       var seenNow = new Set();
 
-      Object.keys(data).forEach(function(plane) {
-        seenNow.add(data[plane].hex);
-        if (data[plane].altitude < floor && !(seen.has(data[plane].hex))) {
-          notify(data[plane]);
-          seen.add([getPoints(data[plane])],data[plane].hex);
-        } else if (seen.has(data[plane].hex)) {
-          seen.get(data[plane].hex).push(getPoints(data[plane]));
+      Object.keys(data).forEach(function(key) {
+        var plane = data[key];
+        seenNow.add(plane.hex);
+
+        if(plane.altitude < floor && !(seen.has(plane.hex))) {
+          notify(plane);
+          seen.add([getPoints(plane)], plane.hex);
+        } else if (seen.has(plane.hex)) {
+          seen.get(plane.hex).push(getPoints(plane));
         }
       });
 
