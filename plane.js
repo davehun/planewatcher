@@ -1,19 +1,22 @@
 var fs = require('fs'),
     path = require('path'),
+    util = require('util'),
     notifier = require('node-notifier'),
     request = require('request'),
     open = require('open'),
     gpsUtil = require("gps-util"),
     Set = require("collections/set"),
-    Map = require("collections/map");
+    Map = require("collections/map"),
+    config = require('./config.json');
 
 var planebase,
-    jsonfile = 'data.json',
     seen = new Map(),
     floor;
 
 function printKml(err, result) {
-  fs.writeFile(ids[i] + "-" + Date.now() +".kml", result, function(err) {
+  var fileName = util.format(config.output.format, ids[i], Date.now());
+
+  fs.writeFile(fileName, result, function(err) {
     if(err) {
       return console.log(err);
     }
@@ -21,11 +24,13 @@ function printKml(err, result) {
 }
 
 function notify(plane) {
+  var message = util.format(config.notification.message, plane.hex, plane.flight);
+
   notifier.notify({
-    title: 'Low flying thing',
-    message: 'low flying thing with tailnumber: ' + plane.hex + " on flight: " + plane.flight ,
-    icon: path.join(__dirname, 'image/helicopter.png'),
-    image: path.join(__dirname, 'image/helicopter.png'),
+    title: config.notification.title,
+    message: message,
+    icon: path.join(__dirname, config.notification.image),
+    image: path.join(__dirname, config.notitication.image),
     sound: true,
     wait: false
   }, function (err, response) {
@@ -44,7 +49,7 @@ function getPoints(plane) {
 }
 
 function watch() {
-  request(planebase+jsonfile, function (error, response, body) {
+  request(planebase + config.json_file, function (error, response, body) {
     if (!error && response.statusCode === 200) {
       data = JSON.parse(body);
       var plane;
@@ -88,13 +93,13 @@ planebase = process.argv[2];
 floor = process.argv[3];
 
 if(isNaN(floor)) {
-    console.log("floor must be a numeric number not:" + floor);
-    process.exit(1);
+  console.log("floor must be a numeric number not:" + floor);
+  process.exit(1);
 }
 
 if(process.argv.length != 4) {
-    console.log("takes 2 arguments, a base url e.g. http://www.example.net/ and a minimum height in feet e.g. 50000");
-    process.exit(1);
+  console.log("takes 2 arguments, a base url e.g. http://www.example.net/ and a minimum height in feet e.g. 50000");
+  process.exit(1);
 }
 
 setInterval(watch,2000);

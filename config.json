@@ -1,0 +1,11 @@
+{
+  "json_file": "data.json",
+  "notification": {
+    "title": "Low flying thing",
+    "message": "low flying thing with tailnumber: %s on flight: %s",
+    "image": "image/helicopter.png"
+  },
+  "output": {
+    "format": "%s-%d.kml"
+  }
+}
