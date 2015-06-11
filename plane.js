@@ -13,8 +13,8 @@ var planebase,
     seen = new Map(),
     floor;
 
-function printKml(err, result) {
-  var fileName = util.format(config.output.format, ids[i], Date.now());
+function printKml(id, err, result) {
+  var fileName = util.format(config.output.format, id, Date.now());
 
   fs.writeFile(fileName, result, function(err) {
     if(err) {
@@ -69,7 +69,10 @@ function watch() {
       for (i=0 ; i < ids.length; i++ ) {
         if(!seenNow.contains(ids[i])) {
           //console.log(seen.get(ids[i]));
-          gpsUtil.toKml(seen.get(ids[i]), printKml);
+
+          // create a partially applied version of the printKml function
+          // with the id argument already bound into place.
+          gpsUtil.toKml(seen.get(ids[i]), printKml.bind(null, ids[i]));
           seen.delete(ids[i]);
         }
       }
