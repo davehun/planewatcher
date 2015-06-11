@@ -1,16 +1,16 @@
-var notifier = require('node-notifier');
-var path = require('path');
-var request = require('request');
-var open = require('open');
-var sleep = require('sleep');
-var planebase;
-var jsonfile = 'data.json';
-var Set = require("collections/set");
-var Map = require("collections/map");
-var seen = new Map();
-var gpsUtil = require("gps-util");
-var fs = require('fs');
-var floor;
+var fs = require('fs'),
+    path = require('path'),
+    notifier = require('node-notifier'),
+    request = require('request'),
+    open = require('open'),
+    gpsUtil = require("gps-util"),
+    Set = require("collections/set"),
+    Map = require("collections/map");
+
+var planebase,
+    jsonfile = 'data.json',
+    seen = new Map(),
+    floor;
 
 function printKml(err, result) {
     fs.writeFile(ids[i] + "-" + Date.now() +".kml", result, function(err) {
