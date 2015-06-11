@@ -63,10 +63,10 @@ function notify(plane) {
 
 function getPoints(plane) {
   return {
-    lat :plane.lat,
-    lng : plane.lon,
-    ele : Math.ceil(plane.altitude / 3) ,
-    time : new Date()
+    lat: plane.lat,
+    lng: plane.lon,
+    ele: Math.ceil(plane.altitude / 3) ,
+    time: new Date()
   };
   //plane.lo
 }
