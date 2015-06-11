@@ -9,9 +9,32 @@ var fs = require('fs'),
     Map = require("collections/map"),
     config = require('./config.json');
 
-var planebase,
-    seen = new Map(),
-    floor;
+var planebaseUrl = process.argv[2],
+    floor = process.argv[3];
+    seen = new Map();
+
+if(isNaN(floor)) {
+  console.log("floor must be a numeric number not:" + floor);
+  process.exit(1);
+}
+
+if(process.argv.length != 4) {
+  console.log("takes 2 arguments, a base url e.g. http://www.example.net/ and a minimum height in feet e.g. 50000");
+  process.exit(1);
+}
+
+function start() {
+  notifier.on('click', function (notifierObject, options) {
+    open(planebaseUrl);
+  });
+
+  notifier.on('timeout', function (notifierObject, options) {
+    open(planebaseUrl);
+  });
+
+  setInterval(watch,2000);
+}
+
 
 function printKml(id, err, result) {
   var fileName = util.format(config.output.format, id, Date.now());
@@ -49,7 +72,7 @@ function getPoints(plane) {
 }
 
 function watch() {
-  request(planebase + config.json_file, function (error, response, body) {
+  request(planebaseUrl + config.json_file, function (error, response, body) {
     if (!error && response.statusCode === 200) {
       data = JSON.parse(body);
       var plane;
@@ -83,26 +106,4 @@ function watch() {
   });
 }
 
-notifier.on('click', function (notifierObject, options) {
-  open(planebase);
-});
-
-notifier.on('timeout', function (notifierObject, options) {
-  open(planebase);
-});
-
-planebase = process.argv[2];
-floor = process.argv[3];
-
-if(isNaN(floor)) {
-  console.log("floor must be a numeric number not:" + floor);
-  process.exit(1);
-}
-
-if(process.argv.length != 4) {
-  console.log("takes 2 arguments, a base url e.g. http://www.example.net/ and a minimum height in feet e.g. 50000");
-  process.exit(1);
-}
-
-setInterval(watch,2000);
-
+start();
