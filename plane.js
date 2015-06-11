@@ -55,7 +55,7 @@ function watch() {
       var plane;
       var seenNow = new Set();
 
-      for(plane in data) {
+      Object.keys(data).forEach(function(plane) {
         seenNow.add(data[plane].hex);
         if (data[plane].altitude < floor && !(seen.has(data[plane].hex))) {
           notify(data[plane]);
@@ -63,19 +63,18 @@ function watch() {
         } else if (seen.has(data[plane].hex)) {
           seen.get(data[plane].hex).push(getPoints(data[plane]));
         }
-      }
+      });
 
-      ids = seen.keys();
-      for (i=0 ; i < ids.length; i++ ) {
-        if(!seenNow.contains(ids[i])) {
-          //console.log(seen.get(ids[i]));
+      seen.keys().forEach(function(id) {
+        if(!seenNow.contains(id)) {
+          //console.log(seen.get(id));
 
           // create a partially applied version of the printKml function
           // with the id argument already bound into place.
-          gpsUtil.toKml(seen.get(ids[i]), printKml.bind(null, ids[i]));
-          seen.delete(ids[i]);
+          gpsUtil.toKml(seen.get(id), printKml.bind(null, id));
+          seen.delete(id);
         }
-      }
+      });
 
     } else {
       console.log("error could not load plane data from:" + planeuri);
